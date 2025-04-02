@@ -1,0 +1,21 @@
+services:
+  db:
+    container_name: db
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+    - POSTGRES_USER=${CNOTES_DBUSER}
+    - POSTGRES_PASSWORD=${CNOTES_DBPASS}
+    - POSTGRES_DB=${CNOTES_DB}
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+
+networks:
+  web_app:
+    driver: bridge
+
+volumes:
+  dbdata:
