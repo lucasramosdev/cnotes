@@ -16,3 +16,11 @@ migrate-db:
 up-app:
 	echo "Starting docker compose app..."
 	docker compose up --build -d app db migrate
+
+up-dev:
+	echo "Starting air reload..."
+	docker compose up air
+
+init-dev:
+	echo "Starting air reload..."
+	docker compose up --build air

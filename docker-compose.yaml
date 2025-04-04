@@ -1,5 +1,22 @@
 services:
 
+  air:
+    container_name: air
+    build:
+      context: .
+      dockerfile: build/Dockerfile.air
+    working_dir: /app
+    ports:
+      - "8080:8080"
+    environment:
+      - LOAD_ENV_FILE=true
+    healthcheck:
+      test: curl -fsS localhost:8080/ping
+    depends_on:
+      - migrate
+    volumes:
+      - ./:/app/
+
   app:
     container_name: app
     build:

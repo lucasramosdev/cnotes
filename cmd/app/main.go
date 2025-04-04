@@ -3,11 +3,13 @@ package main
 import (
 	"context"
 	"fmt"
+	"html/template"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/lucasramosdev/cnotes/internal/database"
+	"github.com/lucasramosdev/cnotes/internal/http"
 )
 
 func main() {
@@ -33,10 +35,9 @@ func main() {
 	defer conn.Close()
 
 	router := gin.Default()
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	router.SetHTMLTemplate(template.Must(template.ParseGlob("web/templates/*.tmpl")))
+	router.Static("static", "./web/static")
+
+	http.SetRoutes(router)
 	router.Run()
 }
