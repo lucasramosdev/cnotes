@@ -5,12 +5,30 @@ services:
     ports:
       - "5432:5432"
     restart: always
+    networks:
+      - web_app
     environment:
     - POSTGRES_USER=${CNOTES_DBUSER}
     - POSTGRES_PASSWORD=${CNOTES_DBPASS}
     - POSTGRES_DB=${CNOTES_DB}
     volumes:
       - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${CNOTES_DBUSER} -d ${CNOTES_DB}'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  migrate:
+    image: migrate/migrate
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - web_app
+    volumes:
+      - ./database/migrations/:/migrations
+    command: ["-path", "/migrations/", "-database", "postgres://${CNOTES_DBUSER}:${CNOTES_DBPASS}@db:5432/${CNOTES_DB}?sslmode=disable", "up"]
 
 
 networks:
