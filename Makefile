@@ -12,3 +12,7 @@ up-db:
 migrate-db:
 	echo "Migrating db app..."
 	docker compose up -d db migrate
+
+up-app:
+	echo "Starting docker compose app..."
+	docker compose up --build -d app db migrate
