@@ -32,6 +32,7 @@ services:
       - migrate
     volumes:
       - ./.env:/.env
+      - ./web:/web
 
   db:
     container_name: db
