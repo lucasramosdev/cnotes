@@ -11,12 +11,59 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet"> 
-        <link rel="stylesheet" href="/static/styles.css"> 
+        <script src="https://unpkg.com/lucide@latest"></script>  
+        <link rel="stylesheet" href="/static/styles.css">
+        <link rel="icon" href="/static/favicon.svg" sizes="any" type="image/svg+xml">
     </head>
     
     <body class="font-[Roboto_Mono] bg-[var(--color-background)] w-screen min-h-screen overflow-x-hidden">
-       <main class="w-max h-max">
-        {{ block "content" . }}{{ end }}
-       </main>
+        <header class="grid grid-cols-6 w-screen py-6 px-4 bg-[var(--color-background)] shadow-sm items-center">
+
+            <div class="col-span-1 flex space-x-4">
+                {{ if ne .path "/home" }}
+                    <a href="/view/FrontPage">
+                        <i data-lucide="arrow-left" class="text-gray-500"></i>
+                    </a>
+                
+
+                {{ else }}
+
+                <h1 class="flex items-center gap-2 text-xl font-semibold text-gray-900">
+                    <i data-lucide="book-open" class="w-6 h-6 text-red-600"></i>
+                    CNotes
+                </h1>
+
+                {{ end }}
+
+                
+            </div>
+
+            <div class="col-span-4 flex justify-center w-full">
+                <div class="col-span-4 relative w-80">
+                    <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+                        <i data-lucide="search"></i>
+                    </span>
+                    <input type="text" placeholder="Pesquisar notas..." 
+                        class="w-full pl-10 pr-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
+                </div> 
+            </div>
+
+            <div class="col-span-1 w-full flex justify-end">
+                <button class="cursor-pointer w-40 flex items-center gap-2 px-4 py-2 text-white bg-red-600 rounded-lg shadow hover:bg-red-700 transition">
+                    <a class="flex justify-center gap-2 items-center">
+                        <i data-lucide="plus-circle" class="w-5 h-5"></i>
+                        <span>Nova nota</span>
+                    </a>
+                </button>
+            </div>
+
+        </header>
+
+        <main class="w-max h-max pt-8 pl-8">
+            {{ block "content" . }}{{ end }}
+        </main>
     </body>
+    <script>
+        lucide.createIcons();
+    </script>
 </html>

@@ -1,6 +1,10 @@
 # ==============================================================================
 # Docker compose commands
 
+down-containers:
+	echo "Removing containers..."
+	docker compose down
+
 clean-db:
 	echo "Cleaning db data..."
 	docker volume rm cnotes_dbdata
