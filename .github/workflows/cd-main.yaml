@@ -7,10 +7,18 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
-
+    environment: production
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      
+      - name: Create .env file
+        run: |
+          cat <<EOF > .env
+          CNOTES_DBUSER=${{ secrets.CNOTES_DBUSER }}
+          CNOTES_DBPASS=${{ secrets.CNOTES_DBPASS }}
+          CNOTES_DB=${{ secrets.CNOTES_DB }}
+          EOF
 
       - name: Up services
         run: |
