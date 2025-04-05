@@ -1,69 +1,68 @@
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <title>
-            CNotes {{ if .Title}} | {{ .Title}} {{end}}
-        </title>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet"> 
-        <script src="https://unpkg.com/lucide@latest"></script>  
-        <link rel="stylesheet" href="/static/styles.css">
-        <link rel="icon" href="/static/favicon.svg" sizes="any" type="image/svg+xml">
-    </head>
-    
-    <body class="font-[Roboto_Mono] bg-[var(--color-background)] w-screen min-h-screen overflow-x-hidden">
-        <header class="grid grid-cols-6 w-screen py-6 px-4 bg-[var(--color-background)] shadow-sm items-center">
+<head>
+    <title>
+        CNotes {{ if .Title}} | {{ .Title}} {{end}}
+    </title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="icon" href="/static/favicon.svg" sizes="any" type="image/svg+xml">
+</head>
 
-            <div class="col-span-1 flex space-x-4">
+<body class="font-[Roboto_Mono] bg-[var(--color-background)] w-screen min-h-screen overflow-x-hidden">
+
+    <header class="w-full px-4 py-6 bg-[var(--color-background)] shadow-sm">
+        <div class="mx-auto flex flex-wrap md:grid md:grid-cols-6 gap-4 items-center">
+
+            <div class="flex justify-start items-center space-x-4 col-span-1">
                 {{ if ne .path "/home" }}
                     <a href="/view/FrontPage">
-                        <i data-lucide="arrow-left" class="text-gray-500"></i>
+                        <i data-lucide="arrow-left" class="text-gray-500 w-6 h-6"></i>
                     </a>
-                
-
                 {{ else }}
-
-                <h1 class="flex items-center gap-2 text-xl font-semibold text-gray-900">
-                    <i data-lucide="book-open" class="w-6 h-6 text-red-600"></i>
-                    CNotes
-                </h1>
-
+                    <h1 class="flex items-center gap-2 text-xl font-semibold text-gray-900">
+                        <i data-lucide="book-open" class="w-6 h-6 text-[var(--color-primary)]"></i>
+                        CNotes
+                    </h1>
                 {{ end }}
-
-                
             </div>
 
-            <div class="col-span-4 flex justify-center w-full">
-                <div class="col-span-4 relative w-80">
+            <div class="flex justify-center w-full md:col-span-4 md:order-none">
+                <div class="relative w-full max-w-md">
                     <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
                         <i data-lucide="search"></i>
                     </span>
-                    <input type="text" placeholder="Pesquisar notas..." 
+                    <input type="text" placeholder="Pesquisar notas..."
                         class="w-full pl-10 pr-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400">
-                </div> 
+                </div>
             </div>
 
-            <div class="col-span-1 w-full flex justify-end">
-                <button class="cursor-pointer w-40 flex items-center gap-2 px-4 py-2 text-white bg-red-600 rounded-lg shadow hover:bg-red-700 transition">
-                    <a class="flex justify-center gap-2 items-center">
+            <div class="flex justify-end w-full md:col-span-1">
+                <a href="#" class="w-full md:w-auto">
+                    <button class="w-full flex items-center justify-center gap-2 px-4 py-2 text-white bg-[var(--color-primary)] rounded-lg shadow hover:bg-red-700 transition">
                         <i data-lucide="plus-circle" class="w-5 h-5"></i>
-                        <span>Nova nota</span>
-                    </a>
-                </button>
+                        <span class="text-sm lg:text-base">Nova nota</span>
+                    </button>
+                </a>
             </div>
 
-        </header>
+        </div>
+    </header>
 
-        <main class="w-max h-max pt-8 pl-8">
-            {{ block "content" . }}{{ end }}
-        </main>
-    </body>
+    <main class="px-4 pt-8">
+        {{ block "content" . }}{{ end }}
+    </main>
+
     <script>
         lucide.createIcons();
     </script>
+
+</body>
 </html>
