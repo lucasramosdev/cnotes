@@ -1,25 +1,33 @@
 package http
 
 import (
+	"context"
+	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/lucasramosdev/cnotes/internal/notes"
 )
 
 var baseObj = gin.H{
-	"path": "/home",
+	"Path": "/home",
 }
 
-func mergeH(extra *gin.H) {
-	for k, v := range baseObj {
-		(*extra)[k] = v
+func GetHome(ctx *gin.Context) {
+	ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Second*1)
+	defer cancel()
+
+	items, err := notesService.RecentNotes(ctxTimeout)
+	if err != nil {
+		log.Println(err.Error())
+		items = []notes.BasicNote{}
 	}
-}
-
-func GetHome(c *gin.Context) {
-	data := &gin.H{}
+	data := &gin.H{
+		"Notes": items,
+	}
 	mergeH(data)
-	c.HTML(http.StatusOK, "home.tmpl", data)
+	ctx.HTML(http.StatusOK, "home.tmpl", data)
 }
 
 func RedirectHome(c *gin.Context) {

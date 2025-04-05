@@ -27,6 +27,7 @@ func main() {
 	db := os.Getenv("CNOTES_DB")
 
 	connectionString := fmt.Sprintf("postgresql://%s:%s@db:5432/%s", dbUser, dbPass, db)
+	fmt.Println(connectionString)
 	conn, err := database.NewConnection(ctx, connectionString)
 	if err != nil {
 		panic(err)
@@ -38,6 +39,8 @@ func main() {
 	router.SetHTMLTemplate(template.Must(template.ParseGlob("web/templates/*.tmpl")))
 	router.Static("static", "./web/static")
 
+	http.Configure()
 	http.SetRoutes(router)
+
 	router.Run()
 }
