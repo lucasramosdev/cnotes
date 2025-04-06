@@ -9,6 +9,8 @@ type Note struct {
 }
 
 type BasicNote struct {
-	ID    int64  `json:"id"`
-	Title string `json:"title"`
+	ID       int64  `json:"id"`
+	Title    string `json:"title"`
+	Theme    string `json:"theme"`
+	Category string `json:"category"`
 }

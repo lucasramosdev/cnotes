@@ -35,8 +35,13 @@ func main() {
 
 	defer conn.Close()
 
+	funcMap := template.FuncMap{
+		"GetTimeFromID": http.GetTimeFromID,
+	}
+
 	router := gin.Default()
-	router.SetHTMLTemplate(template.Must(template.ParseGlob("web/templates/*.tmpl")))
+	router.SetHTMLTemplate(template.Must(template.New("").Funcs(funcMap).ParseGlob("web/templates/*.tmpl")))
+	// router.SetHTMLTemplate(template.Must(template.ParseGlob("/web/templates/*.tmpl")))
 	router.Static("static", "./web/static")
 
 	http.Configure()

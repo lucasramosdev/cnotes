@@ -17,7 +17,10 @@ type RepositoryPostgress struct {
 func (r *RepositoryPostgress) RecentNotes(ctx context.Context) ([]BasicNote, error) {
 	rows, err := r.Conn.Query(
 		ctx,
-		"SELECT id, title from notes order by id desc limit 20",
+		`SELECT notes.id as id, notes.title as title, categories.description as category, themes.description as theme  from notes 
+		left join categories on notes.category = categories.id
+		left join themes on notes.theme = themes.id 
+		order by id desc limit 20`,
 	)
 
 	if err != nil {
@@ -31,7 +34,7 @@ func (r *RepositoryPostgress) RecentNotes(ctx context.Context) ([]BasicNote, err
 	for rows.Next() {
 		var item BasicNote
 
-		if err := rows.Scan(&item.ID, &item.Title); err != nil {
+		if err := rows.Scan(&item.ID, &item.Title, &item.Category, &item.Theme); err != nil {
 			return nil, err
 		}
 
