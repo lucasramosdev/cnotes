@@ -1,4 +1,4 @@
-package http
+package web
 
 import (
 	"net/http"
@@ -8,7 +8,9 @@ import (
 
 func SetRoutes(g *gin.Engine) {
 	g.GET("/", GetHome)
-	g.GET("/home")
+	g.GET("/home", RedirectHome)
+
+	g.GET("/notes/:id", GetNote)
 
 	g.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{

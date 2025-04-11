@@ -23,13 +23,13 @@
 
             <div class="flex justify-start items-center space-x-4 col-span-1">
                 {{ if ne .Path "/home" }}
-                    <a href="/view/FrontPage">
+                    <a href="/">
                         <i data-lucide="arrow-left" class="text-gray-500 w-6 h-6"></i>
                     </a>
                 {{ else }}
                     <h1 class="flex items-center gap-2 text-xl font-semibold text-gray-900">
                         <i data-lucide="book-open" class="w-6 h-6 text-[var(--color-primary)]"></i>
-                        CNotes
+                        Cornell Notes
                     </h1>
                 {{ end }}
             </div>
@@ -46,7 +46,7 @@
 
             <div class="flex justify-end w-full md:col-span-1">
                 <a href="#" class="w-full md:w-auto">
-                    <button class="w-full flex items-center justify-center gap-2 px-4 py-2 text-white bg-[var(--color-primary)] rounded-lg shadow hover:bg-red-700 transition">
+                    <button class="w-full flex items-center justify-center gap-2 px-4 py-2 text-white bg-[var(--color-primary)] rounded-lg shadow hover:bg-red-700 transition cursor-pointer">
                         <i data-lucide="plus-circle" class="w-5 h-5"></i>
                         <span class="text-sm lg:text-base">Nova nota</span>
                     </button>

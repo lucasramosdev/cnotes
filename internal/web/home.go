@@ -1,4 +1,4 @@
-package http
+package web
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"github.com/lucasramosdev/cnotes/internal/notes"
 )
 
-var baseObj = gin.H{
+var homeObj = &gin.H{
 	"Path": "/home",
 }
 
@@ -26,10 +26,11 @@ func GetHome(ctx *gin.Context) {
 	data := &gin.H{
 		"Notes": items,
 	}
-	mergeH(data)
-	ctx.HTML(http.StatusOK, "home.tmpl", data)
+	MergeH(data, homeObj)
+
+	RenderHTML(ctx.Writer, "home", data)
 }
 
-func RedirectHome(c *gin.Context) {
-	c.Redirect(http.StatusFound, "/")
+func RedirectHome(ctx *gin.Context) {
+	ctx.Redirect(http.StatusFound, "/")
 }

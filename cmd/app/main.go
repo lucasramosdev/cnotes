@@ -3,13 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"html/template"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/lucasramosdev/cnotes/internal/database"
-	"github.com/lucasramosdev/cnotes/internal/http"
+	"github.com/lucasramosdev/cnotes/internal/web"
 )
 
 func main() {
@@ -35,17 +34,11 @@ func main() {
 
 	defer conn.Close()
 
-	funcMap := template.FuncMap{
-		"GetTimeFromID": http.GetTimeFromID,
-	}
-
 	router := gin.Default()
-	router.SetHTMLTemplate(template.Must(template.New("").Funcs(funcMap).ParseGlob("web/templates/*.tmpl")))
-	// router.SetHTMLTemplate(template.Must(template.ParseGlob("/web/templates/*.tmpl")))
 	router.Static("static", "./web/static")
 
-	http.Configure()
-	http.SetRoutes(router)
+	web.Configure()
+	web.SetRoutes(router)
 
 	router.Run()
 }
