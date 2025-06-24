@@ -1,33 +1,42 @@
 {{ define "content" }}
-<section class="flex flex-col justify-start w-full pl-2 gap-2 items-start mb-2">
+<section class="flex flex-col justify-start w-full pl-2 gap-2 items-start mb-6">
     <h1 class="text-2xl font-bold">{{ .Title }}</h1> 
-    <span class="text-[var(--color-badge)] text-(length:--text-tiny) sm:text-sm">{{.ID | GetTimeFromID}}</span>
+    <span class="text-[var(--color-badge)] text-sm">{{.ID | GetTimeFromID}}</span>
+    <div class="flex gap-2 justify-start
+    *:inline-block *:py-2 *:px-6 *:rounded-full *:text-(length:--text-tiny) *:font-bold">
+        <span class="bg-[#E5E5E5] text-[#000]">{{ .Category}}</span>
+        <span class="bg-[#262626] text-[#fff]">{{ .Theme}}</span>
+    </div>
 </section>
 <section>
-    <div class="flex w-full border-b-2 border-[var(--color-primary)] *:border-[var(--color-primary)] *:p-4">
-        <div class="w-[40%] border-e-2 sm:w-[20%]"> 
-            <h3 class="font-bold text-sm sm:text-base">Keywords</h3>
+    <div class="flex w-full border-b-2 border-[var(--color-primary)] *:border-[var(--color-primary)] *:py-4">
+        <div class="w-[45%] border-e-2 sm:w-[20%]"> 
+            <h3 class="font-bold text-sm sm:text-lg">Keywords</h3>
             <ul class="list-disc mt-1">
 
                 {{ range .Keywords}}
-                <li class="text-(length:--text-tiny) sm:text-sm ml-6 mb-1">{{ . }}</li>
+                <div class="pl-8 mb-3">
+                    <li class="text-(length:--text-tiny) sm:text-sm">{{ . }}</li>
+                </div>
                 {{end}}
             </ul>
       
         </div>
         <div class="w-full border-s-2">
-            <h3 class="font-bold w-full text-center text-sm sm:text-base">Anotações</h3>
+            <h3 class="font-bold w-full text-center text-sm sm:text-lg">Anotações</h3>
             <ul class="list-disc mt-1">
 
                 {{ range .Annotations}}
-                <li class="text-(length:--text-tiny) sm:text-sm ml-6 mb-1">{{ . }}</li>
+                <div class="pl-8 mb-3">
+                    <li class="text-(length:--text-tiny) sm:text-sm">{{ . }}</li>
+                </div>
                 {{end}}
             </ul>
         </div>
     </div>
     <div class="w-full p-4 pl-8 border-t-2 border-[var(--color-primary)]">
-        <h3 class="font-bold text-sm sm:text-base">Resumo</h3>
-        <p class="indent-6 text-(length:--text-tiny) mt-1 sm:text-sm">{{ .Summary}}</p>
+        <h3 class="font-bold text-sm sm:text-lg">Resumo</h3>
+        <p class="indent-6 text-(length:--text-tiny) mt-1 sm:text-sm leading-6">{{ .Summary}}</p>
     </div>
 </section>
 {{ end }}
