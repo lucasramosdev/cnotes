@@ -9,6 +9,7 @@ import (
 type Repository interface {
 	RecentNotes(ctx context.Context) ([]BasicNote, error)
 	GetNote(ctx context.Context, id *int64) (*Note, error)
+	SearchNotes(ctx context.Context, search *string) ([]BasicNote, error)
 }
 
 type RepositoryPostgres struct {
@@ -71,49 +72,56 @@ func (r *RepositoryPostgres) GetNote(ctx context.Context, id *int64) (*Note, err
 		return nil, err
 	}
 
-	keywords, err := r.Conn.Query(
-		ctx,
-		`SELECT description from keywords where note = $1
-		order by position asc;`,
-		*id,
-	)
-
-	if err != nil {
+	if err := r.getKeywords(ctx, id, &note); err != nil {
 		return nil, err
 	}
 
-	for keywords.Next() {
-		var keyword string
-
-		if err := keywords.Scan(&keyword); err != nil {
-			return nil, err
-		}
-
-		note.Keywords = append(note.Keywords, keyword)
-
-	}
-
-	annotations, err := r.Conn.Query(
-		ctx,
-		`SELECT value from annotations where note = $1
-		order by position asc;`,
-		*id,
-	)
-
-	if err != nil {
+	if err := r.getAnnotations(ctx, id, &note); err != nil {
 		return nil, err
-	}
-
-	for annotations.Next() {
-		var annotation string
-
-		if err := annotations.Scan(&annotation); err != nil {
-			return nil, err
-		}
-
-		note.Annotations = append(note.Annotations, annotation)
 	}
 
 	return &note, nil
+
+}
+
+func (r *RepositoryPostgres) SearchNotes(ctx context.Context, search *string) ([]BasicNote, error) {
+	var items []BasicNote
+
+	rows, err := r.Conn.Query(
+		ctx,
+		`SELECT notes.id as id, notes.title as title, categories.description as category, themes.description as theme  from notes 
+		left join categories on notes.category = categories.id
+		left join themes on notes.theme = themes.id
+		where 	concat_ws(' ', title, summary, category, theme) ILIKE '%' || $1 || '%'
+		or exists (
+			SELECT 1
+			from keywords as kw
+			where kw.description ILIKE '%' || $1 || '%'
+		)
+		or exists (
+			SELECT 1
+			from annotations as ant
+			where ant.value ILIKE '%' || $1 || '%'
+		)
+		order by id desc;`,
+		*search,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var item BasicNote
+
+		if err := rows.Scan(&item.ID, &item.Title, &item.Category, &item.Theme); err != nil {
+			return nil, err
+		}
+
+		items = append(items, item)
+
+	}
+
+	return items, nil
 
 }

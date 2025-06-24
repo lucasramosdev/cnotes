@@ -10,7 +10,8 @@ func SetRoutes(g *gin.Engine) {
 	g.GET("/", GetHome)
 	g.GET("/home", RedirectHome)
 
-	g.GET("/notes/:id", GetNote)
+	g.GET("/note/:id", GetNote)
+	g.GET("/search", SearchNotes)
 
 	g.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{

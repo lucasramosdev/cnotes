@@ -1,6 +1,9 @@
 package notes
 
-import "context"
+import (
+	"context"
+	"time"
+)
 
 type Service struct {
 	Repository Repository
@@ -17,4 +20,15 @@ func (s Service) RecentNotes(ctx context.Context) ([]BasicNote, error) {
 
 func (s Service) GetNote(ctx context.Context, id *int64) (*Note, error) {
 	return s.Repository.GetNote(ctx, id)
+}
+
+func (s Service) SearchNotes(search *string) ([]BasicNote, error) {
+	ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Second*1)
+	defer cancel()
+
+	if *search == "" {
+		return s.RecentNotes(ctxTimeout)
+	}
+
+	return s.Repository.SearchNotes(ctxTimeout, search)
 }
