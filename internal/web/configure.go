@@ -9,7 +9,7 @@ var notesService notes.Service
 
 func Configure() {
 	notesService = notes.Service{
-		Repository: &notes.RepositoryPostgress{
+		Repository: &notes.RepositoryPostgres{
 			Conn: database.Conn,
 		},
 	}

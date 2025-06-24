@@ -25,6 +25,6 @@ up-dev:
 	echo "Starting air reload..."
 	docker compose up air
 
-init-dev:
+build-dev:
 	echo "Starting air reload..."
 	docker compose up --build air

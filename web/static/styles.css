@@ -3,5 +3,7 @@
     --color-background: #F9FAFB;
     --color-primary: #BA1C1C;
     --color-foreground: #1A1A1C;
+    --color-badge: #525252;
 
+    --text-tiny: 10px;
 }

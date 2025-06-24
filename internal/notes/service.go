@@ -14,3 +14,7 @@ func (s Service) RecentNotes(ctx context.Context) ([]BasicNote, error) {
 
 	return notes, nil
 }
+
+func (s Service) GetNote(ctx context.Context, id *int64) (*Note, error) {
+	return s.Repository.GetNote(ctx, id)
+}

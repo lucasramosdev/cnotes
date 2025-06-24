@@ -1,3 +1,33 @@
 {{ define "content" }}
-    <p>Note {{ .ID}}</p>
+<section class="flex flex-col justify-start w-full pl-2 gap-2 items-start mb-2">
+    <h1 class="text-2xl font-bold">{{ .Title }}</h1> 
+    <span class="text-[var(--color-badge)] text-(length:--text-tiny) sm:text-sm">{{.ID | GetTimeFromID}}</span>
+</section>
+<section>
+    <div class="flex w-full border-b-2 border-[var(--color-primary)] *:border-[var(--color-primary)] *:p-4">
+        <div class="w-[40%] border-e-2 sm:w-[20%]"> 
+            <h3 class="font-bold text-sm sm:text-base">Keywords</h3>
+            <ul class="list-disc mt-1">
+
+                {{ range .Keywords}}
+                <li class="text-(length:--text-tiny) sm:text-sm ml-6 mb-1">{{ . }}</li>
+                {{end}}
+            </ul>
+      
+        </div>
+        <div class="w-full border-s-2">
+            <h3 class="font-bold w-full text-center text-sm sm:text-base">Anotações</h3>
+            <ul class="list-disc mt-1">
+
+                {{ range .Annotations}}
+                <li class="text-(length:--text-tiny) sm:text-sm ml-6 mb-1">{{ . }}</li>
+                {{end}}
+            </ul>
+        </div>
+    </div>
+    <div class="w-full p-4 pl-8 border-t-2 border-[var(--color-primary)]">
+        <h3 class="font-bold text-sm sm:text-base">Resumo</h3>
+        <p class="indent-6 text-(length:--text-tiny) mt-1 sm:text-sm">{{ .Summary}}</p>
+    </div>
+</section>
 {{ end }}
