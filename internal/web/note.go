@@ -14,7 +14,7 @@ var noteObj = gin.H{
 }
 
 func GetNote(ctx *gin.Context) {
-	ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Second*1)
+	ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Second*60)
 	defer cancel()
 
 	data := &gin.H{}

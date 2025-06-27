@@ -23,7 +23,7 @@ func (s Service) GetNote(ctx context.Context, id *int64) (*Note, error) {
 }
 
 func (s Service) SearchNotes(search *string) ([]BasicNote, error) {
-	ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Second*1)
+	ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Second*60)
 	defer cancel()
 
 	if *search == "" {

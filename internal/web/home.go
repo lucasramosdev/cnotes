@@ -15,7 +15,7 @@ var homeObj = &gin.H{
 }
 
 func GetHome(ctx *gin.Context) {
-	ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Second*1)
+	ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Second*60)
 	defer cancel()
 
 	items, err := notesService.RecentNotes(ctxTimeout)
