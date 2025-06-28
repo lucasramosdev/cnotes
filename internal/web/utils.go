@@ -15,8 +15,8 @@ func MergeH(extra *gin.H, baseObj *gin.H) {
 	}
 }
 
-func GetTimeFromID(ID int64) string {
-	timestamp := (ID >> 22) + internal.Epoch
+func GetTimeFromID(ID uint64) string {
+	timestamp := int64(ID>>22) + internal.Epoch
 	t := time.UnixMilli(timestamp)
 
 	location, err := time.LoadLocation("America/Sao_Paulo")
@@ -25,7 +25,6 @@ func GetTimeFromID(ID int64) string {
 	}
 
 	tInBrazil := t.In(location)
-
 	formatted := tInBrazil.Format("02/01/2006 15:04")
 
 	return formatted
