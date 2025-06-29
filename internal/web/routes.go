@@ -13,6 +13,8 @@ func SetRoutes(g *gin.Engine) {
 	g.GET("/note/:id", GetNote)
 	g.GET("/search", SearchNotes)
 
+	g.POST("/login", Login)
+
 	g.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",

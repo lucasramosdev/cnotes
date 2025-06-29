@@ -26,7 +26,7 @@ func main() {
 	db := os.Getenv("CNOTES_DB")
 	dbHost := os.Getenv("CNOTES_DBHOST")
 
-	connectionString := fmt.Sprintf("postgresql://%s:%s@%s/%s", dbUser, dbPass, db, dbHost)
+	connectionString := fmt.Sprintf("postgresql://%s:%s@%s/%s", dbUser, dbPass, dbHost, db)
 	conn, err := database.NewConnection(ctx, connectionString)
 	if err != nil {
 		panic(err)
