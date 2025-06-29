@@ -7,6 +7,7 @@ RUN ls
 RUN go build -o cnotes ./cmd/app
 
 FROM alpine:3.20 as binary
+RUN apk update && apk add --no-cache tzdata
 COPY --from=base /src/cnotes/cnotes .
 EXPOSE 8080
 CMD ["./cnotes"]
