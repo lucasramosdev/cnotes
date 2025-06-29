@@ -26,7 +26,7 @@ func SearchNotes(ctx *gin.Context) {
 		"Notes": notes,
 	}
 
-	MergeH(data, &noteObj)
+	MergeH(data, &searchObj)
 
 	RenderHTML(ctx.Writer, "search", data)
 }
