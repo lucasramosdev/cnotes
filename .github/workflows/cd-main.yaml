@@ -18,6 +18,7 @@ jobs:
           CNOTES_DBUSER=${{ secrets.CNOTES_DBUSER }}
           CNOTES_DBPASS=${{ secrets.CNOTES_DBPASS }}
           CNOTES_DB=${{ secrets.CNOTES_DB }}
+          CNOTES_DBHOST=${{ secrets.CNOTES_DBHOST }}
           EOF
 
       - name: Up services
