@@ -3,6 +3,8 @@ package notes
 import (
 	"context"
 	"time"
+
+	"github.com/lucasramosdev/cnotes/internal"
 )
 
 type Service struct {
@@ -31,4 +33,25 @@ func (s Service) SearchNotes(search *string) ([]BasicNote, error) {
 	}
 
 	return s.Repository.SearchNotes(ctxTimeout, search)
+}
+
+func (s Service) Create(ctx context.Context, data *CreateNote) (*internal.ID, error) {
+	node := internal.NewSnowflakeNode(1)
+	id := node.GenerateID()
+	note := &Note{
+		ID:          int64(id),
+		Category:    data.Category,
+		Theme:       data.Theme,
+		Title:       data.Title,
+		Summary:     data.Summary,
+		Keywords:    data.Keywords,
+		Annotations: data.Annotations,
+	}
+
+	if err := s.Repository.Create(ctx, note); err != nil {
+		return nil, err
+	}
+
+	return &id, nil
+
 }

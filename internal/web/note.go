@@ -3,10 +3,12 @@ package web
 import (
 	"context"
 	"log"
+	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/lucasramosdev/cnotes/internal/notes"
 )
 
 var noteObj = gin.H{
@@ -16,8 +18,6 @@ var noteObj = gin.H{
 func GetNote(ctx *gin.Context) {
 	ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Second*60)
 	defer cancel()
-
-	data := &gin.H{}
 
 	idParam := ctx.Param("id")
 
@@ -32,7 +32,7 @@ func GetNote(ctx *gin.Context) {
 		log.Println(err)
 	}
 
-	data = &gin.H{
+	data := &gin.H{
 		"ID":          id,
 		"Title":       note.Title,
 		"Summary":     note.Summary,
@@ -45,4 +45,29 @@ func GetNote(ctx *gin.Context) {
 	MergeH(data, &noteObj)
 
 	RenderHTML(ctx.Writer, "note", data)
+}
+
+func CreateNote(ctx *gin.Context) {
+	ctxTimeout, cancel := context.WithTimeout(context.Background(), time.Second*60)
+	defer cancel()
+
+	var note notes.CreateNote
+
+	if err := ctx.ShouldBindJSON(&note); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	id, err := notesService.Create(ctxTimeout, &note)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(200, gin.H{
+		"id": id,
+	},
+	)
+
 }

@@ -2,6 +2,7 @@ package notes
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -10,6 +11,7 @@ type Repository interface {
 	RecentNotes(ctx context.Context) ([]BasicNote, error)
 	GetNote(ctx context.Context, id *int64) (*Note, error)
 	SearchNotes(ctx context.Context, search *string) ([]BasicNote, error)
+	Create(ctx context.Context, note *Note) error
 }
 
 type RepositoryPostgres struct {
@@ -124,4 +126,68 @@ func (r *RepositoryPostgres) SearchNotes(ctx context.Context, search *string) ([
 
 	return items, nil
 
+}
+
+func (r *RepositoryPostgres) Create(ctx context.Context, note *Note) error {
+	var category int64
+	var theme int64
+	if err := r.Conn.QueryRow(
+		ctx,
+		`SELECT id from categories where description = $1`,
+		note.Category,
+	).Scan(&category); err != nil {
+		return fmt.Errorf("category %s not found", note.Category)
+	}
+
+	if err := r.Conn.QueryRow(
+		ctx,
+		`SELECT id from themes where description = $1`,
+		note.Theme,
+	).Scan(&theme); err != nil {
+		return fmt.Errorf("theme %s not found", note.Theme)
+	}
+
+	_, err := r.Conn.Exec(
+		ctx,
+		`INSERT INTO notes (id, category, theme, title, summary) VALUES ($1, $2, $3, $4, $5)`,
+		note.ID,
+		category,
+		theme,
+		note.Title,
+		note.Summary,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	for position, keyword := range note.Keywords {
+		_, err := r.Conn.Exec(
+			ctx,
+			`INSERT INTO keywords (note, description, position) VALUES ($1, $2, $3)`,
+			note.ID,
+			keyword,
+			position,
+		)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	for position, annotation := range note.Annotations {
+		_, err := r.Conn.Exec(
+			ctx,
+			`INSERT INTO annotations (note, value, position) VALUES ($1, $2, $3)`,
+			note.ID,
+			annotation,
+			position,
+		)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

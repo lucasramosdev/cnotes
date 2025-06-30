@@ -22,11 +22,7 @@ func SetRoutes(g *gin.Engine) {
 
 	authRotes := g.Group("/")
 	authRotes.Use(CheckAuth)
-	authRotes.POST("/note", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{
-			"message": "pong authenticated",
-		})
-	})
+	authRotes.POST("/note", CreateNote)
 
 	g.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
