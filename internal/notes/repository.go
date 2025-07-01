@@ -56,9 +56,8 @@ func (r *RepositoryPostgres) RecentNotes(ctx context.Context) ([]BasicNote, erro
 
 func (r *RepositoryPostgres) GetNote(ctx context.Context, id *int64) (*Note, error) {
 	var note = Note{
-		ID:          *id,
-		Keywords:    []string{},
-		Annotations: []string{},
+		ID:    *id,
+		Clues: []Clue{},
 	}
 
 	err := r.Conn.QueryRow(
@@ -74,11 +73,7 @@ func (r *RepositoryPostgres) GetNote(ctx context.Context, id *int64) (*Note, err
 		return nil, err
 	}
 
-	if err := r.getKeywords(ctx, id, &note); err != nil {
-		return nil, err
-	}
-
-	if err := r.getAnnotations(ctx, id, &note); err != nil {
+	if err := r.getClues(ctx, id, &note); err != nil {
 		return nil, err
 	}
 
@@ -161,31 +156,32 @@ func (r *RepositoryPostgres) Create(ctx context.Context, note *Note) error {
 		return err
 	}
 
-	for position, keyword := range note.Keywords {
-		_, err := r.Conn.Exec(
+	for position, clue := range note.Clues {
+		var clueID uint32
+		err := r.Conn.QueryRow(
 			ctx,
-			`INSERT INTO keywords (note, description, position) VALUES ($1, $2, $3)`,
+			`INSERT INTO keywords (note, description, position) VALUES ($1, $2, $3) returning id`,
 			note.ID,
-			keyword,
+			clue.Value,
 			position,
-		)
+		).Scan(&clueID)
 
 		if err != nil {
 			return err
 		}
-	}
 
-	for position, annotation := range note.Annotations {
-		_, err := r.Conn.Exec(
-			ctx,
-			`INSERT INTO annotations (note, value, position) VALUES ($1, $2, $3)`,
-			note.ID,
-			annotation,
-			position,
-		)
+		for position, annotation := range clue.Annotations {
+			_, err := r.Conn.Exec(
+				ctx,
+				`INSERT INTO annotations (clue, value, position) VALUES ($1, $2, $3)`,
+				clueID,
+				annotation,
+				position,
+			)
 
-		if err != nil {
-			return err
+			if err != nil {
+				return err
+			}
 		}
 	}
 
