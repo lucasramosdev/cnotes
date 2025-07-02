@@ -3,6 +3,7 @@ package notes
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -126,7 +127,21 @@ func (r *RepositoryPostgres) SearchNotes(ctx context.Context, search *string) ([
 func (r *RepositoryPostgres) Create(ctx context.Context, note *Note) error {
 	var category int64
 	var theme int64
-	if err := r.Conn.QueryRow(
+
+	tx, err := r.Conn.Begin(ctx)
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		if err != nil {
+			tx.Rollback(ctx)
+		} else {
+			tx.Commit(ctx)
+		}
+	}()
+
+	if err := tx.QueryRow(
 		ctx,
 		`SELECT id from categories where description = $1`,
 		note.Category,
@@ -134,7 +149,7 @@ func (r *RepositoryPostgres) Create(ctx context.Context, note *Note) error {
 		return fmt.Errorf("category %s not found", note.Category)
 	}
 
-	if err := r.Conn.QueryRow(
+	if err := tx.QueryRow(
 		ctx,
 		`SELECT id from themes where description = $1`,
 		note.Theme,
@@ -142,7 +157,7 @@ func (r *RepositoryPostgres) Create(ctx context.Context, note *Note) error {
 		return fmt.Errorf("theme %s not found", note.Theme)
 	}
 
-	_, err := r.Conn.Exec(
+	_, err = tx.Exec(
 		ctx,
 		`INSERT INTO notes (id, category, theme, title, summary) VALUES ($1, $2, $3, $4, $5)`,
 		note.ID,
@@ -158,9 +173,9 @@ func (r *RepositoryPostgres) Create(ctx context.Context, note *Note) error {
 
 	for position, clue := range note.Clues {
 		var clueID uint32
-		err := r.Conn.QueryRow(
+		err := tx.QueryRow(
 			ctx,
-			`INSERT INTO keywords (note, description, position) VALUES ($1, $2, $3) returning id`,
+			`INSERT INTO clues (note, value, position) VALUES ($1, $2, $3) returning id`,
 			note.ID,
 			clue.Value,
 			position,
@@ -169,9 +184,9 @@ func (r *RepositoryPostgres) Create(ctx context.Context, note *Note) error {
 		if err != nil {
 			return err
 		}
-
+		log.Println(clueID)
 		for position, annotation := range clue.Annotations {
-			_, err := r.Conn.Exec(
+			_, err := tx.Exec(
 				ctx,
 				`INSERT INTO annotations (clue, value, position) VALUES ($1, $2, $3)`,
 				clueID,

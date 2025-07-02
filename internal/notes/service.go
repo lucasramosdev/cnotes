@@ -39,13 +39,12 @@ func (s Service) Create(ctx context.Context, data *CreateNote) (*internal.ID, er
 	node := internal.NewSnowflakeNode(1)
 	id := node.GenerateID()
 	note := &Note{
-		ID:          int64(id),
-		Category:    data.Category,
-		Theme:       data.Theme,
-		Title:       data.Title,
-		Summary:     data.Summary,
-		Keywords:    data.Keywords,
-		Annotations: data.Annotations,
+		ID:       int64(id),
+		Category: data.Category,
+		Theme:    data.Theme,
+		Title:    data.Title,
+		Summary:  data.Summary,
+		Clues:    data.Clues,
 	}
 
 	if err := s.Repository.Create(ctx, note); err != nil {

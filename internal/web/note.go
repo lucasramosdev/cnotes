@@ -33,13 +33,12 @@ func GetNote(ctx *gin.Context) {
 	}
 
 	data := &gin.H{
-		"ID":          id,
-		"Title":       note.Title,
-		"Summary":     note.Summary,
-		"Annotations": note.Annotations,
-		"Keywords":    note.Keywords,
-		"Category":    note.Category,
-		"Theme":       note.Theme,
+		"ID":       id,
+		"Title":    note.Title,
+		"Summary":  note.Summary,
+		"Clues":    note.Clues,
+		"Category": note.Category,
+		"Theme":    note.Theme,
 	}
 
 	MergeH(data, &noteObj)
