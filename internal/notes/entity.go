@@ -1,5 +1,7 @@
 package notes
 
+import "html/template"
+
 type Note struct {
 	ID       int64  `json:"id"`
 	Category string `json:"category"`
@@ -27,4 +29,16 @@ type BasicNote struct {
 	Title    string `json:"title"`
 	Theme    string `json:"theme"`
 	Category string `json:"category"`
+}
+
+type NoteDetails struct {
+	ID       int64
+	Category string
+	Theme    string
+	Title    string
+	Summary  string
+	Clues    []struct {
+		Value       string
+		Annotations []template.HTML
+	}
 }

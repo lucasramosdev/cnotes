@@ -21,17 +21,7 @@ func (s Service) RecentNotes(ctx context.Context) ([]BasicNote, error) {
 	return notes, nil
 }
 
-func (s Service) GetNote(ctx context.Context, id *int64) (*struct {
-	ID       int64
-	Category string
-	Theme    string
-	Title    string
-	Summary  string
-	Clues    []struct {
-		Value       string
-		Annotations []template.HTML
-	}
-}, error) {
+func (s Service) GetNote(ctx context.Context, id *int64) (*NoteDetails, error) {
 	note, err := s.Repository.GetNote(ctx, id)
 	if err != nil {
 		return nil, err
@@ -52,8 +42,14 @@ func (s Service) GetNote(ctx context.Context, id *int64) (*struct {
 			Annotations []template.HTML
 		}{Value: clue.Value, Annotations: annotations})
 	}
-
-	return
+	return &NoteDetails{
+		ID:       note.ID,
+		Category: note.Category,
+		Theme:    note.Theme,
+		Title:    note.Title,
+		Summary:  note.Summary,
+		Clues:    processedClues,
+	}, nil
 }
 
 func (s Service) SearchNotes(search *string) ([]BasicNote, error) {
