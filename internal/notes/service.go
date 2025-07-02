@@ -2,6 +2,7 @@ package notes
 
 import (
 	"context"
+	"html/template"
 	"time"
 
 	"github.com/lucasramosdev/cnotes/internal"
@@ -20,8 +21,39 @@ func (s Service) RecentNotes(ctx context.Context) ([]BasicNote, error) {
 	return notes, nil
 }
 
-func (s Service) GetNote(ctx context.Context, id *int64) (*Note, error) {
-	return s.Repository.GetNote(ctx, id)
+func (s Service) GetNote(ctx context.Context, id *int64) (*struct {
+	ID       int64
+	Category string
+	Theme    string
+	Title    string
+	Summary  string
+	Clues    []struct {
+		Value       string
+		Annotations []template.HTML
+	}
+}, error) {
+	note, err := s.Repository.GetNote(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	processedClues := make([]struct {
+		Value       string
+		Annotations []template.HTML
+	}, 0, len(note.Clues))
+
+	for _, clue := range note.Clues {
+		var annotations []template.HTML
+		for _, annotation := range clue.Annotations {
+			annotations = append(annotations, template.HTML(annotation))
+		}
+		processedClues = append(processedClues, struct {
+			Value       string
+			Annotations []template.HTML
+		}{Value: clue.Value, Annotations: annotations})
+	}
+
+	return
 }
 
 func (s Service) SearchNotes(search *string) ([]BasicNote, error) {

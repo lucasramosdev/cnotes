@@ -9,20 +9,47 @@
     </div>
 </section>
 <section>
-    <div class="flex w-full border-b-2 border-[var(--color-primary)] *:border-[var(--color-primary)] *:py-4">
-        <div class="w-[45%] border-e-2 sm:w-[30%]"> 
-            <h3 class="font-bold text-sm sm:text-lg">Keywords</h3>
+    <div class="flex flex-col w-full border-b-2 border-[var(--color-primary)] [&_*]:border-[var(--color-primary)]">
+        <div class="flex w-full">
+            <div class="w-[45%] border-e-2 sm:w-[30%]">
+                <h3 class="font-bold text-sm sm:text-lg">Cola</h3>
+            </div>
+            <div class="w-full border-s-2 text-center">
+                <h3 class="font-bold text-sm sm:text-lg">Anotações</h3>
+            </div>
+        </div>
+        {{ range .Clues}}
+        <div class="flex w-full h-full"> 
+            <div class="w-[45%] border-e-2 sm:w-[30%]">
+                <ul class="list-disc mt-4 mb-6">
+
+                    <div class="pl-8 mb-3">
+                        <li class="text-(length:--text-tiny) sm:text-sm">{{ .Value }}</li>
+                    </div>
+                </ul>
+            </div>
+            <div class="w-full border-s-2">
+                <ul class="list-disc mt-4 mb-6">
+                    {{ range .Annotations}}
+                    <div class="pl-8 mb-3">
+                        <li class="text-(length:--text-tiny) sm:text-sm">{{ . }}</li>
+                    </div>
+                    {{end}}
+                </ul>
+            </div>
+        </div>
+        {{end}}
+        <!-- <div class="w-[45%] border-e-2 sm:w-[30%]"> 
+            <h3 class="font-bold text-sm sm:text-lg">Cola</h3>
             <ul class="list-disc mt-1">
 
-                {{ range .Keywords}}
                 <div class="pl-8 mb-3">
-                    <li class="text-(length:--text-tiny) sm:text-sm">{{ . }}</li>
+                    <li class="text-(length:--text-tiny) sm:text-sm">{{ .Value }}</li>
                 </div>
-                {{end}}
             </ul>
-      
-        </div>
-        <div class="w-full border-s-2">
+            
+        </div> -->
+        <!-- <div class="w-full border-s-2">
             <h3 class="font-bold w-full text-center text-sm sm:text-lg">Anotações</h3>
             <ul class="list-disc mt-1">
 
@@ -32,7 +59,7 @@
                 </div>
                 {{end}}
             </ul>
-        </div>
+        </div> -->
     </div>
     <div class="w-full p-4 pl-8 border-t-2 border-[var(--color-primary)]">
         <h3 class="font-bold text-sm sm:text-lg">Resumo</h3>
