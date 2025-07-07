@@ -90,11 +90,11 @@ func (r *RepositoryPostgres) SearchNotes(ctx context.Context, search *string) ([
 		`SELECT notes.id as id, notes.title as title, categories.description as category, themes.description as theme  from notes 
 		left join categories on notes.category = categories.id
 		left join themes on notes.theme = themes.id
-		where 	concat_ws(' ', title, summary, category, theme) ILIKE '%' || $1 || '%'
+		where concat_ws(' ', title, summary, categories.description, themes.description) ILIKE '%' || $1 || '%'
 		or exists (
 			SELECT 1
-			from keywords as kw
-			where kw.description ILIKE '%' || $1 || '%'
+			from clues as clue
+			where clue.value ILIKE '%' || $1 || '%'
 		)
 		or exists (
 			SELECT 1
